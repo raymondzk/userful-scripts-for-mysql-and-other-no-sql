@@ -1,0 +1,8 @@
+A-BIGDATA-MYCAT02 21.4.2.102 [{"table_schema":"BIGDATA_3","table_name":"v1","engine":"innodb"},{"table_schema":"BIGDATA_4","table_name":"v2","engine":"myisam"}]
+A-CAMA-DB12 21.2.4.66 [{"table_schema":"cama_dn12_3","table_name":"v1","engine":"innodb"},{"table_schema":"cama_dn12_4","table_name":"v2","engine":"myisam"}]
+A-CAMA-DB14 21.2.4.69 [{"table_schema":"cama_dn14_3","table_name":"v3","engine":"innodb"},{"table_schema":"cama_dn14_4","table_name":"v4","engine":"mysam"}]
+A-CAMA-DB16 21.2.4.65 [{"table_schema":"cama_dn16_1","table_name":"v1","engine":"innodb"},{"table_schema":"cama_dn16_1","table_name":"v2","engine":"myisam"}]
+A-DHYX-RHCDB02 21.5.2.152 [{"table_schema":"dhyx_3","table_name":"v1","engine":"innodb"},{"table_schema":"dhyx_4","table_name":"v2","engine":"myisam"}]
+A-CAMA-DB18 21.2.4.62 [{"table_schema":"cama_dn18_1","table_name":"v1","engine":"innodb"},{"table_schema":"cama_dn18_2","table_name":"v2","engine":"myisam"}]
+A-BIGDATA-MYCAT01 21.4.2.101 [{"table_schema":"BIGDATA_1","table_name":"v1","engine":"innodb"},{"table_schema":"BIGDATA_2","table_name":"v2","engine":"myisam"}]
+A-DHYX-RHCDB01 21.5.2.151 [{"table_schema":"dhyx_1","table_name":"v1","engine":"innodb"},{"table_schema":"dhyx_2","table_name":"v2","engine":"myisam"}]

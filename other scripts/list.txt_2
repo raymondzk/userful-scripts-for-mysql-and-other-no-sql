@@ -1,0 +1,2 @@
+A-CAMA-DB12 21.2.4.66 [{"table_schema":"cama_dn12_5","table_name":"v1","engine":"innodb"},{"table_schema":"cama_dn12_6","table_name":"v2","engine":"myisam"}]
+A-CAMA-DB14 21.2.4.69 [{"table_schema":"cama_dn14_5","table_name":"v3","engine":"innodb"},{"table_schema":"cama_dn14_6","table_name":"v4","engine":"mysam"}]
