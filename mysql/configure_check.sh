@@ -8,9 +8,7 @@ cat<<EOF
 ./configure_check.sh --master_ip 10.0.0.17 --master_port 3306 --admin_password xxxx --repl_password xxxx 
 
 EOF
-
 exit 
-
 }
 #ARGS=`getopt  -o h -al  master_port: -- "$@"`
 #ARGS=`getopt -o p:host: -al master_port:,master_ip: -- "$@"`
@@ -148,7 +146,7 @@ fi
 }
 
 
-
+ 
 set_and_check_slave_read_only_persistence(){
 if [ -n "$role" ];then
 
