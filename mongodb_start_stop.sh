@@ -1,5 +1,5 @@
 #!/bin/bash
-
+#this script is used for start and stop mongodb
 
 FUsage(){
   cat <<EOF
