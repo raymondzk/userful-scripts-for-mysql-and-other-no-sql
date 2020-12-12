@@ -9,19 +9,27 @@ import  linecache
 def print_help_info():
     print('''
     #目前该脚本用于分析mysql binlog中大事务，长事务（需要自行传递--transaction_time 参数）及每个表的增删改查情况
-    #该脚本目前只测试过binlog格式为row,gtid模式下的相关信息统计，具体参数用法执行-h
-    1、python t1.py --transaction_size 20M --start_position 4 --stop_position 1000 --binlog_file mysql-bin.000001
+    #该脚本目前只测试过binlog格式为row,gtid模式下的相关信息统计，具体参数用法执行-h,以下为该脚本的4种用法
+    #查看mysql 是否开启binlog_rows_query_log_events 的值，若为off请加上参数-binlog_rows_query_log_events off
+    1、python get_binlog_info.py -transaction_size 20M --start_position 4 --stop_position 1000 --binlog_file mysql-bin.000001
     #根据起始位置点截取binlog分析
-    2、python t1.py --transaction_size 20M --start_position 4 --binlog_file mysql-bin.000001
+    2、python get_binlog_info.py -transaction_size 20M --start_position 4 --binlog_file mysql-bin.000001
     #根据start_position开始位置点分析，一直到结尾
-    3、python t1.py -transaction_size 20M  - --start-datetime  "2020-10-21 17:49:00"  --stop-datetime "2020-10-21 21:15:00" --binlog_file mysql-bin.000001
+    3、python get_binlog_info.py -transaction_size 20M  - --start-datetime  "2020-10-21 17:49:00"  --stop-datetime "2020-10-21 21:15:00" --binlog_file mysql-bin.000001
     #根据起始时间点进行分析
-    4、python t1.py -transaction_size 20M  --binlog_file mysql-bin.000001
+    4、python get_binlog_info.py -transaction_size 20M  --binlog_file mysql-bin.000001
     #直接分析整个binlog
     #如果不想统计归档日志中每个表的dml次数，请添加--dml_total_count=off
     #如果想统计归档日志中长事务，请添加--transaction_time 秒 例如想确认归档日志中是否有运行时间超过1000秒的事务
     #--transaction_time  1000
+    式例:
+    1、若binlog_rows_query_log_events 参数值为off，想查询事务大小超过5M的大事务，binlog文件名为mysql-bin.000007的binlog，用以下参数
+    python get_binlog_info.py -binlog_file /data/mysql/binlog/mysql-bin.000007  -transaction_size 5M  -binlog_rows_query_log_events off
+    2、若binlog_rows_query_log_events 参数值为on,想查询事务大小超过5M的大事务，binlog文件名为mysql-bin.000007的binlog，用以下参数
+    python get_binlog_info.py -binlog_file /data/mysql/binlog/mysql-bin.000007  -transaction_size 5M
+    
     ''')
+    quit()
 
 def unix_timestamp(beijing_time):
     unixtime_format = int(time.mktime(time.strptime(beijing_time, '%Y%m%d %H:%M:%S')))
@@ -42,9 +50,17 @@ parser.add_argument('-transaction_time','--transaction_time',help="to pass a par
 
 
 args = parser.parse_args()
+
 binlog_file = args.binlog_file
+if binlog_file == None:
+    print_help_info()
+else:
+    binlog_file = args.binlog_file
 transaction_size = args.transaction_size
-transaction_size = transaction_size.replace('M','')
+if transaction_size == None:
+    print_help_info()
+else:
+    transaction_size = transaction_size.replace('M','')
 transaction_size = int(transaction_size)
 transaction_size = transaction_size * 1024
 binlog_query = args.binlog_rows_query_log_events
@@ -86,6 +102,7 @@ else:
 
 if binlog_file == None or transaction_size == "None":
     print("you must pass binlog_file or  transaction_size")
+    print_help_info()
     quit()
 
 
@@ -150,7 +167,6 @@ else:
 
 
 file_name = binlog_temp_file
-print(file_name)
 
 f = open(file_name,'r')
 line_num = 0
@@ -239,11 +255,6 @@ def table_operation_count(line):
 
 
 
-
-
-
-
-
 while True:
     line_num = line_num + 1
     # print(line_num)
@@ -261,26 +272,30 @@ while True:
             sql_info = linecache.getline(file_name,line_num + 3 )
         if gtid_mode == "on":
             gtid_info = linecache.getline(file_name,line_num - 3 )
+            gtid_info = gtid_info.strip()
     if binlog_format =="row" and dml_total_count == "on":
         table_operation_count(line)
     if line[: 6] == 'COMMIT':
         # print("line_num is line_num {}".format(line_num))
         stop_position = linecache.getline(file_name,line_num - 2)
-        stop_postion = str(stop_position[5:])
-        stop_position = int(stop_postion)
+        stop_position = str(stop_position[5:])
+        stop_position = int(stop_position)
         stop_time = linecache.getline(file_name,line_num - 1)
         stop_time = stop_time[1:16]
         stop_time = "20" + stop_time
         stop_time = unix_timestamp(stop_time)
+
         # print("stop_position is {}".format(stop_position))
         # print("transize is {}".format(transaction_size))
-        if int(stop_postion) - int(start_position) >= transaction_size:
-            transaction_actully_size = int(stop_postion) - int(start_position)
-            print("start_position is {},stop_position is {}, transaction_actully_size is {}".format(start_position,stop_postion,transaction_actully_size))
+        if int(stop_position) - int(start_position) >= transaction_size:
+            transaction_actully_size = int(stop_position) - int(start_position)
+            print("start_position is {} # stop_position is {} # transaction_actully_size is {}".format(start_position,stop_position,transaction_actully_size))
             if gtid_mode == "on":
                 print("gtid num is {}".format(gtid_info))
             if binlog_query == "on":
                 print(sql_info)
+            else:
+                pass
 
         if transaction_time != None:
             if stop_time - start_time  >= transaction_time:
@@ -295,3 +310,4 @@ print("every table insert operation count:%s"%(insert_dic))
 print("every table update operation count:%s"%(update_dic))
 print("every table delete operation count:%s"%(delete_dic))
 print("every table delete dml count:%s"%(dml_dic))
+os.remove(binlog_temp_file)
