@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/userful-scripts-for-mysql-and-other-no-sql.iml" filepath="$PROJECT_DIR$/.idea/userful-scripts-for-mysql-and-other-no-sql.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/ip_ping.iml" filepath="$PROJECT_DIR$/.idea/ip_ping.iml" />
     </modules>
   </component>
 </project>
